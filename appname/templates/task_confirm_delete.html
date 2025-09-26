@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container d-flex justify-content-center mt-5">
+    <div class="card shadow p-4" style="max-width: 500px; width: 100%;">
+        <h4 class="text-center text-danger mb-4">Підтвердження видалення</h4>
+        <p class="text-center">Ви впевнені, що хочете <strong>видалити завдання</strong>:</p>
+        <h5 class="text-center text-dark mb-3">"{{ object.title }}"?</h5>
+        
+        <form method="post" class="d-flex justify-content-center gap-2">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger">Так, видалити</button>
+            <a href="{% url 'task-list' %}" class="btn btn-secondary">Скасувати</a>
+        </form>
+    </div>
+</div>
+{% endblock %}

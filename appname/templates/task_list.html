@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="text-center">
+    <h4 class="mb-4">Список завдань</h4>
+
+    <form method="get" class="d-flex gap-2 flex-wrap align-items-center justify-content-center">
+        <select name="status" class="form-select w-auto">
+            <option value="">Статус</option>
+            <option value="todo">Очікує</option>
+            <option value="in_progress">В процесі</option>
+            <option value="done">Виконано</option>
+        </select>
+
+        <select name="priority" class="form-select w-auto">
+            <option value="">Пріоритет</option>
+            <option value="low">Низький</option>
+            <option value="medium">Середній</option>
+            <option value="high">Високий</option>
+        </select>
+
+        <input type="date" name="due_date" class="form-control w-auto" placeholder="Термін">
+        
+        <button type="submit" class="btn btn-secondary">Фільтрувати</button>
+        <a class="btn btn-secondary ms-2 mb-4" href="{% url 'task-create' %}">Створити нове завдання</a>
+    </form>
+
+
+    <ul class="list-group mx-auto" style="max-width: 1000px;">
+        {% for task in tasks %}
+        <li class="list-group-item text-center">
+            <strong>{{ task.title }}</strong><br>
+            <span class="text-muted">{{ task.get_status_display }} | {{ task.get_priority_display }} | {{ task.due_date|date:"j E Y" }}</span>
+            <p class="mt-2">{{ task.description }}</p>
+            
+            {% if user.is_authenticated %}
+            <div class="mt-2 d-flex justify-content-center gap-2">
+                <a href="{% url 'task-update' task.pk %}" class="btn btn-sm btn-secondary">Редагувати</a>
+                <a href="{% url 'task-delete' task.pk %}" class="btn btn-sm btn-secondary">Видалити</a>
+            </div>
+            {% endif %}
+
+
+
+            <form action="{% url 'comment-create' task.pk %}" method="post" class="mt-3">
+                {% csrf_token %}
+                <input type="text" name="text" class="form-control text-center" placeholder="Коментар">
+                <button type="submit" class="btn btn-secondary btn-sm mt-2">Додати</button>
+            </form>
+
+            <ul class="mt-2 list-unstyled">
+                {% for comment in task.comment_set.all %}
+                    <li class="text-muted">{{ comment.text }}</li>
+                {% endfor %}
+            </ul>
+        </li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}
