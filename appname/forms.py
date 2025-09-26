@@ -5,7 +5,7 @@ from .models import User, Task
 class UserRegisterForm(UserCreationForm):
     class Meta:
         model = User
-        fields = ('username', 'email', 'role', 'password1', 'password2')
+        fields = ('username', 'email', 'password1', 'password2')
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -18,10 +18,6 @@ class UserRegisterForm(UserCreationForm):
             'class': 'form-control',
             'placeholder': 'Email'
         })
-        self.fields['role'].widget = forms.Select(
-            choices=User.ROLE_CHOICES,
-            attrs={'class': 'form-select'}
-        )
         self.fields['password1'].widget.attrs.update({
             'class': 'form-control',
             'placeholder': 'Пароль'
@@ -48,3 +44,4 @@ class TaskForm(forms.ModelForm):
     class Meta:
         model = Task
         fields = ['title', 'description', 'status', 'priority', 'due_date']
+
